@@ -1,6 +1,32 @@
 <template>
-    <div>
-        <words-grid :words="gameWords" :check="check" :master="true"/>
+    <div class="flex flex-row w-full">
+        <words-grid :words="gameWords"
+                    :check="check"
+                    :master="master"/>
+        <div class="flex flex-col w-1/6">
+            <button @click="newGame"
+                    class="text-xl btn btn-default btn-primary my-2">
+                New Game
+            </button>
+            <button @click="master = !master"
+                    class="text-xl btn btn-default btn-primary my-2"
+                    :class="master ? 'bg-primary-dark' : ''">
+                Master
+            </button>
+
+            <div v-if="master">
+                <div class="pt-4">
+                    <div v-for="redWord in redWords" class="text-base text-center text-red-600">
+                        {{redWord | uppercase}}
+                    </div>
+                </div>
+                <div class="pt-4">
+                    <div v-for="blueWord in blueWords" class="text-base text-center text-blue-600">
+                        {{blueWord | uppercase}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -14,7 +40,8 @@
       return {
         gameWords: [],
         check: [],
-        starter: null
+        starter: null,
+        master: false
       }
     },
     components: {
@@ -25,6 +52,10 @@
       this.generateCheckList()
     },
     methods:{
+      newGame(){
+        this.generateWordList()
+        this.generateCheckList()
+      },
       generateWordList() {
         this.gameWords = this.getRandom(words, 25)
       },
@@ -61,6 +92,25 @@
           taken[x] = --len in taken ? taken[len] : len;
         }
         return result;
+      }
+    },
+    computed: {
+      redWords() {
+        return this.gameWords.filter((val, ind) => {
+          return this.check[ind] === 'R'
+        })
+      },
+      blueWords() {
+        return this.gameWords.filter((val, ind) => {
+          return this.check[ind] === 'B'
+        })
+      }
+    },
+    filters: {
+      uppercase: function (value) {
+        if (!value) return ''
+        value = value.toString()
+        return value.toUpperCase()
       }
     }
   }
