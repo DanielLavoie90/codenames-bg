@@ -1,6 +1,7 @@
 <template>
     <div class="flex flex-row w-full">
-        <words-grid :words="gameWords"
+        <words-grid ref="grid"
+                    :words="gameWords"
                     :check="check"
                     :master="master"/>
         <div class="flex flex-col w-1/6">
@@ -55,6 +56,7 @@
       newGame(){
         this.generateWordList()
         this.generateCheckList()
+        this.$refs.grid.resetChecked()
       },
       generateWordList() {
         this.gameWords = this.getRandom(words, 25)
