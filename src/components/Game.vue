@@ -139,7 +139,7 @@
         }
         this.userRef = this.$fb.ref('games/' + this.$route.params.gameId + '/users').push({
           username,
-          master: this.master
+          master: false
         })
       },
       signoutUser() {
@@ -148,8 +148,13 @@
         this.$fb.ref('games/' + this.$route.params.gameId).off('value')
       },
       newGame() {
-        this.toggleMaster(true)
+        this.removeAllMaster()
         this.$fb.ref('games/' + this.$route.params.gameId).update(this.generateNewGame())
+      },
+      removeAllMaster(){
+        this.users.forEach((u, k) => {
+          this.$fb.ref('games/' + this.$route.params.gameId + '/users/' + key).update({master: false})
+        })
       },
       toggleMaster(forceFalse = false) {
         this.master = forceFalse ? false : !this.master
