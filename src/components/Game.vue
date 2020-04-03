@@ -107,7 +107,9 @@
         })
       },
       signoutUser() {
+        console.log('signout')
         this.userRef.remove()
+        this.$fb.ref('games/' + this.$route.params.gameId).off('value')
       },
       newGame() {
         this.master = false
