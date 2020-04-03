@@ -125,11 +125,11 @@
         this.$fb.ref('games/' + this.$route.params.gameId).off('value')
       },
       newGame() {
-        this.master = false
+        this.toggleMaster(true)
         this.$fb.ref('games/' + this.$route.params.gameId).update(this.generateNewGame())
       },
-      toggleMaster() {
-        this.master = !this.master
+      toggleMaster(forceFalse = false) {
+        this.master = forceFalse ? false : !this.master
         this.userRef.update({master: this.master})
       },
       isChecked(word) {
