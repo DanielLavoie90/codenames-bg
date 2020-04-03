@@ -75,7 +75,7 @@
         while (!username || username.length < 5) {
           username = prompt('Veuillez entrer un nom d\'utilisateur (5 caractère min)', username)
         }
-        localStorage.setItem('username', this.tempUsername)
+        localStorage.setItem('username', username)
         this.username = username
       },
       registerName() {
