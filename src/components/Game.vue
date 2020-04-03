@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col">
+    <div class="flex flex-col h-full w-full">
         <div class="flex flex-row text-center justify-around text-xl">
             <div v-if="!isGameOver">
                 Restant:
@@ -15,8 +15,8 @@
             </div>
         </div>
 
-        <div class="flex flex-row w-full">
-            <div class="flex flex-col w-1/6 text-xl">
+        <div class="flex flex-row w-full h-full">
+            <div class="flex flex-col w-1/6 text-base">
                 <div v-for="(user, key) in users"
                      :key="key"
                      class="px-4"
@@ -36,7 +36,7 @@
                         class="text-xl btn btn-default btn-primary my-2">
                     New Game
                 </button>
-                <button @click="toggleMaster"
+                <button @click="toggleMaster(false)"
                         class="text-xl btn btn-default btn-primary my-2"
                         :class="master ? 'bg-primary-dark' : ''">
                     Master
@@ -77,21 +77,32 @@
         starter: null,
         master: false,
         users: [],
-        userRef: null
+        userRef: null,
+        window: {
+          width: 0,
+          height: 0
+        }
       }
     },
     components: {
       WordsGrid
     },
     created() {
+      window.addEventListener('resize', this.handleResize);
+      this.handleResize();
       this.getDBGame()
       this.signUser()
       window.addEventListener('unload', this.signoutUser)
     },
     beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize);
       this.signoutUser()
     },
     methods: {
+      handleResize() {
+        this.window.width = window.innerWidth;
+        this.window.height = window.innerHeight;
+      },
       getDBGame() {
         this.$fb.ref('games/' + this.$route.params.gameId).on('value', snap => {
           if(!snap.val().name){
@@ -179,6 +190,9 @@
       }
     },
     computed: {
+      isVertical(){
+        return this.window.height >= this.window.width
+      },
       redWords() {
         return this.gameWords.filter((val, ind) => {
           return this.check[ind] === 'R'

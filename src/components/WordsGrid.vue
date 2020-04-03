@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-row flex-wrap justify-between w-full h-full">
         <div v-for="(word, index) in words" :key="index"
-              class="w-1/5">
+              class="w-1/5 h-1/5">
             <word @word-checked="wordClicked"
                   :value="word"
                   :index="index"

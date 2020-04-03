@@ -1,10 +1,10 @@
 <template>
     <div @click="wordClicked(index)"
-         class="text-sm lg:text-base xl:text-2xl h-24
-         p-2 pt-8 xl:pt-6
-         m-2 font-bold border-4 border-black rounded-lg word-card"
+         class="flex flex-col justify-around text-xs lg:text-base xl:text-2xl m-2 font-bold border-4 border-black rounded-lg word-card"
          :class="checkedWordClass">
-        {{value | uppercase}}
+        <p>
+            {{value | uppercase}}
+        </p>
     </div>
 </template>
 
@@ -73,6 +73,8 @@
         background-color: #f7f3e9;
         text-shadow: 1px 1px #58595E;
         text-align: center;
+        vertical-align: middle;
+        height: calc(100% - 1rem)
     }
 
     .checked-word {
