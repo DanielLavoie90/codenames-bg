@@ -3,6 +3,9 @@
         <div v-if="username">
             <div class="text-2xl mb-4">
                 Bonjour, {{username}}
+                <button @click="changeUsername" class="btn btn-default btn-primary ml-2">
+                    Changer
+                </button>
             </div>
             <br>
 
@@ -67,6 +70,14 @@
       this.getGames()
     },
     methods: {
+      changeUsername() {
+        let username = localStorage.getItem('username')
+        while (!username || username.length < 5) {
+          username = prompt('Veuillez entrer un nom d\'utilisateur (5 caractère min)', username)
+        }
+        localStorage.setItem('username', this.tempUsername)
+        this.username = username
+      },
       registerName() {
         if (!this.tempUsername || this.tempUsername.length < 5) {
           this.error = 'Doit contenir un minimum de 5 caractère.'
@@ -95,7 +106,7 @@
         )
       },
       newGame() {
-        const gameName = prompt("Veuillez entrer le nom de la partie", "Nouvelle Partie");
+        const gameName = prompt('Veuillez entrer le nom de la partie', 'Nouvelle Partie')
         this.$fb.ref('games').push({
           name: gameName,
           players: [],
