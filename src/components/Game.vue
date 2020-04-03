@@ -152,8 +152,8 @@
         this.$fb.ref('games/' + this.$route.params.gameId).update(this.generateNewGame())
       },
       removeAllMaster(){
-        this.users.forEach((u, k) => {
-          this.$fb.ref('games/' + this.$route.params.gameId + '/users/' + key).update({master: false})
+        Object.keys(this.users).forEach((k) => {
+          this.$fb.ref('games/' + this.$route.params.gameId + '/users/' + k).update({master: false})
         })
       },
       toggleMaster(forceFalse = false) {
