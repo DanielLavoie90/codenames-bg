@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-screen h-screen">
+    <div class="flex flex-col">
         <div class="flex flex-row text-center justify-around text-xl">
             <div v-if="!isGameOver">
                 Restant:
@@ -14,19 +14,23 @@
                 Partie terminée
             </div>
         </div>
+
         <div class="flex flex-row w-full">
-            <div class="flex flex-col w-1/6 text-xl p-4">
-                <div v-for="user in users"
-                     :key="user.username"
+            <div class="flex flex-col w-1/6 text-xl">
+                <div v-for="(user, key) in users"
+                     :key="key"
+                     class="px-4"
                      :class="user.master ? 'font-bold' : ''">
                     {{user.username}} {{user.master ? '(master)' : ''}}
                 </div>
             </div>
+
             <words-grid ref="grid"
                         :words="gameWords"
                         :check="check"
                         :checked="checked"
                         :master="master"/>
+
             <div class="flex flex-col w-1/6 pl-4">
                 <button @click="newGame"
                         class="text-xl btn btn-default btn-primary my-2">
@@ -90,6 +94,11 @@
     methods: {
       getDBGame() {
         this.$fb.ref('games/' + this.$route.params.gameId).on('value', snap => {
+          if(!snap.val().name){
+            console.log('not existing')
+            this.$router.push({name: 'home'})
+            return
+          }
           this.gameWords = snap.val().words
           this.starter = snap.val().starter
           this.check = snap.val().solution
@@ -101,8 +110,12 @@
         })
       },
       signUser() {
+        let username = localStorage.getItem('username')
+        while(!username || username.length < 5){
+          username = prompt("Veuillez entrer un nom d'utilisateur (5 caractère min)", "");
+        }
         this.userRef = this.$fb.ref('games/' + this.$route.params.gameId + '/users').push({
-          username: localStorage.getItem('username'),
+          username,
           master: this.master
         })
       },
