@@ -95,8 +95,9 @@
         )
       },
       newGame() {
+        const gameName = prompt("Veuillez entrer le nom de la partie", "Nouvelle Partie");
         this.$fb.ref('games').push({
-          name: 'New Game',
+          name: gameName,
           players: [],
           words: [],
           solution: [],
