@@ -1,15 +1,23 @@
 <template>
     <div class="flex flex-row w-full">
+        <div class="flex flex-col w-1/6 text-xl p-4">
+            <div v-for="user in users"
+                 :key="user.username"
+                 :class="user.master ? 'font-bold' : ''">
+                {{user.username}} {{user.master ? '(master)' : ''}}
+            </div>
+        </div>
         <words-grid ref="grid"
                     :words="gameWords"
                     :check="check"
+                    :checked="checked"
                     :master="master"/>
-        <div class="flex flex-col w-1/6">
+        <div class="flex flex-col w-1/6 pl-4">
             <button @click="newGame"
                     class="text-xl btn btn-default btn-primary my-2">
                 New Game
             </button>
-            <button @click="master = !master"
+            <button @click="toggleMaster"
                     class="text-xl btn btn-default btn-primary my-2"
                     :class="master ? 'bg-primary-dark' : ''">
                 Master
@@ -32,7 +40,7 @@
 </template>
 
 <script>
-  import words from '../words-fr'
+  import wordsList from '../words-fr'
   import WordsGrid from './WordsGrid'
 
   export default {
@@ -41,45 +49,80 @@
       return {
         gameWords: [],
         check: [],
+        checked: [],
         starter: null,
-        master: false
+        master: false,
+        users: [],
+        userRef: null
       }
     },
     components: {
       WordsGrid
     },
     created(){
-      this.generateWordList()
-      this.generateCheckList()
+      this.getDBGame()
+      this.signUser()
+      window.addEventListener('unload', this.signoutUser)
+    },
+    beforeDestroy() {
+      this.signoutUser()
     },
     methods:{
+      getDBGame() {
+        this.$fb.ref('games/' + this.$route.params.gameId).on('value', snap => {
+          this.gameWords = snap.val().words
+          this.starter = snap.val().starter
+          this.check = snap.val().solution
+          this.checked = snap.val().checked
+          this.users = snap.val().users
+          if(!this.gameWords){
+            this.newGame()
+          }
+        })
+      },
+      signUser(){
+        this.userRef = this.$fb.ref('games/' + this.$route.params.gameId + '/users').push({
+          username: localStorage.getItem('username'),
+          master: this.master
+        })
+      },
+      signoutUser() {
+        this.userRef.remove()
+      },
       newGame(){
-        this.generateWordList()
-        this.generateCheckList()
-        this.$refs.grid.resetChecked()
+        this.master = false
+        this.$fb.ref('games/' + this.$route.params.gameId).update(this.generateNewGame())
       },
-      generateWordList() {
-        this.gameWords = this.getRandom(words, 25)
+      toggleMaster(){
+        this.master = !this.master
+        this.userRef.update({master: this.master})
       },
-      generateCheckList() {
+      generateNewGame() {
+        const words = this.getRandom(wordsList, 25)
         const redStart = Math.floor(Math.random() * 2) === 0
-        this.starter = redStart ? 'R' : 'B'
+        const starter = redStart ? 'R' : 'B'
         const assignedCards = this.getRandom([...Array(25).keys()], 18);
         const starterCards = this.getRandom(assignedCards, 9)
         const otherCards = assignedCards.filter((c) => !starterCards.includes(c))
         const assassinCard = this.getRandom(otherCards, 1)
         const secondCards = otherCards.filter(c => !assassinCard.includes(c))
-        this.check = Array(25)
+        const check = Array(25)
         for (let i = 0; i < 25; i++) {
           if(starterCards.includes(i)){
-            this.check[i] = redStart ? 'R' : 'B'
+            check[i] = redStart ? 'R' : 'B'
           } else if (secondCards.includes(i)){
-            this.check[i] = !redStart ? 'R' : 'B'
+            check[i] = !redStart ? 'R' : 'B'
           } else if (assassinCard.includes(i)){
-            this.check[i] = 'A'
+            check[i] = 'A'
           } else {
-            this.check[i] = 'N'
+            check[i] = 'N'
           }
+        }
+        return {
+          words,
+          solution: check,
+          checked: Array(25).fill(false),
+          starter
         }
       },
       getRandom(arr, n) {
@@ -100,12 +143,12 @@
       redWords() {
         return this.gameWords.filter((val, ind) => {
           return this.check[ind] === 'R'
-        })
+        }).sort()
       },
       blueWords() {
         return this.gameWords.filter((val, ind) => {
           return this.check[ind] === 'B'
-        })
+        }).sort()
       }
     },
     filters: {

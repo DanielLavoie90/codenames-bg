@@ -22,29 +22,21 @@
       check: {
         type: Array
       },
+      checked: {
+        type: Array
+      },
       master: {
         type: Boolean
       }
     },
     name: 'WordsGrid',
-    data() {
-      return {
-        checked: []
-      }
-    },
-    mounted() {
-      this.resetChecked()
-    },
     methods: {
-      resetChecked() {
-        this.$set(this, 'checked', Array(25).fill(false))
-      },
       getChecked(index) {
         return this.checked[index]
       },
       wordClicked(index) {
         if(this.checked[index]) return
-        this.$set(this.checked, index, true)
+        this.$fb.ref('games/' + this.$route.params.gameId + '/checked').child(index).set(true)
       },
     },
     components: {

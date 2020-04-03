@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="w-screen h-screen p-4">
-    <game/>
+    <router-view/>
   </div>
 </template>
 
@@ -8,9 +8,6 @@
 import Game from './components/Game'
 export default {
   name: 'App',
-  components: {
-    Game
-  }
 }
 </script>
 
