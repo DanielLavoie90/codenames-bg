@@ -25,6 +25,10 @@
       },
       master: {
         type: Boolean
+      },
+      gameOver: {
+        type: Boolean,
+        default: false
       }
     },
     name: 'Word',
@@ -39,19 +43,19 @@
         let classes = this.checked ? 'checked-word' : ''
         switch (this.owner) {
           case 'R':
-            classes += this.master ? 'm-red-card' : ''
+            classes += (this.master || this.gameOver) ? 'm-red-card' : ''
             classes += this.checked ? ' red-card' : ''
             break
           case 'B':
-            classes += this.master ? 'm-blue-card' : ''
+            classes += (this.master || this.gameOver) ? 'm-blue-card' : ''
             classes += this.checked ? ' blue-card' : ''
             break
           case 'A':
-            classes += this.master ? 'm-assassin-card' : ''
+            classes += (this.master || this.gameOver) ? 'm-assassin-card' : ''
             classes += this.checked ? ' assassin-card' : ''
             break
           default:
-            classes += this.master ? 'm-neutral-card' : ''
+            classes += (this.master || this.gameOver) ? 'm-neutral-card' : ''
             classes += this.checked ? ' neutral-card' : ''
             break
         }

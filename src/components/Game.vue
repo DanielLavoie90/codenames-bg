@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col h-full w-full">
+
         <div class="flex flex-row text-center justify-around text-xl">
             <div v-if="!isGameOver">
                 Restant:
@@ -17,42 +18,53 @@
 
         <div class="flex flex-row w-full h-full">
             <div class="flex flex-col w-1/6 text-base">
-                <div v-for="(user, key) in users"
-                     :key="key"
-                     class="px-4"
-                     :class="user.master ? 'font-bold' : ''">
-                    {{user.username}} {{user.master ? '(master)' : ''}}
+                <button @click="$router.push({name: 'home'})"
+                        class="text-xl btn btn-default btn-primary m-2">
+                    Retour
+                </button>
+                <button @click="newGame"
+                        class="text-xl btn btn-default btn-primary m-2">
+                    New Game
+                </button>
+                <div class="border-2 border-black rounded p-2 m-2">
+                    <div class="text-xl">
+                        Utilisateurs
+                    </div>
+                    <hr class="mb-2">
+                    <div v-for="(user, key) in users"
+                         :key="key"
+                         class="ml-2 mb-1"
+                         :class="user.master ? 'font-bold' : ''">
+                        {{user.username}} {{user.master ? '(master)' : ''}}
+                    </div>
                 </div>
             </div>
 
             <words-grid ref="grid"
+                        :game-over="isGameOver"
                         :words="gameWords"
                         :check="check"
                         :checked="checked"
                         :master="master"/>
 
             <div class="flex flex-col w-1/6 pl-4">
-                <button @click="newGame"
-                        class="text-xl btn btn-default btn-primary my-2">
-                    New Game
-                </button>
                 <button @click="toggleMaster(false)"
                         class="text-xl btn btn-default btn-primary my-2"
                         :class="master ? 'bg-primary-dark' : ''">
-                    Master
+                    Maître Espion
                 </button>
 
-                <div v-if="master">
+                <div v-if="master" class="text-base lg:text-xl font-bold text-center">
                     <div class="pt-4">
                         <div v-for="redWord in redWords"
-                             class="text-base text-center text-red-600"
+                             class="text-red-600"
                              :class="isChecked(redWord) ? 'line-through' : ''">
                             {{redWord | uppercase}}
                         </div>
                     </div>
                     <div class="pt-4">
                         <div v-for="blueWord in blueWords"
-                             class="text-base text-center text-blue-600"
+                             class=" text-blue-600"
                              :class="isChecked(blueWord) ? 'line-through' : ''">
                             {{blueWord | uppercase}}
                         </div>

@@ -3,6 +3,7 @@
         <div v-for="(word, index) in words" :key="index"
               class="w-1/5 h-1/5">
             <word @word-checked="wordClicked"
+                  :game-over="gameOver"
                   :value="word"
                   :index="index"
                   :checked="getChecked(index)"
@@ -16,6 +17,10 @@
     import Word from './Word'
   export default {
     props: {
+      gameOver: {
+        type: Boolean,
+        default: false
+      },
       words: {
         type: Array
       },
@@ -35,7 +40,7 @@
         return this.checked[index]
       },
       wordClicked(index) {
-        if(this.checked[index]) return
+        if(this.gameOver || this.checked[index]) return
         this.$fb.ref('games/' + this.$route.params.gameId + '/checked').child(index).set(true)
       },
     },
