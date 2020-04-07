@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="text-xl">
         <div v-if="username">
             <div class="text-2xl mb-4">
                 Bonjour, {{username}}
@@ -8,7 +8,27 @@
                 </button>
             </div>
             <br>
-
+            <div class="text-xl">
+                Règles du jeu :
+                <div>
+                    <a href="https://iello.fr/regles/Codenames_regles.pdf"
+                       class="ml-4 text-blue-700"
+                       target="_blank">
+                        PDF
+                    </a>
+                </div>
+                <div>
+                    <a href="https://www.youtube.com/watch?v=qM6V5w7q4H0"
+                       class="ml-4 text-blue-700"
+                       target="_blank">
+                        Youtube
+                    </a>
+                </div>
+            </div>
+            <br>
+            <div class="text-2xl underline mb-2">
+                Parties en cours
+            </div>
             <div v-if="Object.keys(games).length">
                 <div v-for="(game, key) in games"
                      :key="key">

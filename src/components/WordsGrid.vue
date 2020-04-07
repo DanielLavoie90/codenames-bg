@@ -32,6 +32,9 @@
       },
       master: {
         type: Boolean
+      },
+      canClick: {
+        type: Boolean
       }
     },
     name: 'WordsGrid',
@@ -40,7 +43,7 @@
         return this.checked[index]
       },
       wordClicked(index) {
-        if(this.gameOver || this.checked[index]) return
+        if(this.gameOver || !this.canClick || this.checked[index]) return
         this.$fb.ref('games/' + this.$route.params.gameId + '/checked').child(index).set(true)
       },
     },

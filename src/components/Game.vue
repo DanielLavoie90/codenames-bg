@@ -22,6 +22,10 @@
                         class="text-xl btn btn-default btn-primary m-2">
                     Retour
                 </button>
+                <button @click="clearPlayers"
+                        class="text-xl btn btn-default btn-primary m-2">
+                    Clear Players
+                </button>
                 <button @click="newGame"
                         class="text-xl btn btn-default btn-primary m-2">
                     New Game
@@ -45,9 +49,14 @@
                         :words="gameWords"
                         :check="check"
                         :checked="checked"
-                        :master="master"/>
+                        :master="master"
+                        :can-click="canClick"/>
 
             <div class="flex flex-col w-1/6 pl-4">
+                <button @click="canClick = !canClick"
+                        class="text-xl btn btn-default btn-primary my-2">
+                    {{ canClick ? 'Désactiver Click' : 'Activer Click'}}
+                </button>
                 <button @click="toggleMaster(false)"
                         class="text-xl btn btn-default btn-primary my-2"
                         :class="master ? 'bg-primary-dark' : ''">
@@ -88,6 +97,7 @@
         checked: [],
         starter: null,
         master: false,
+        canClick: true,
         users: [],
         userRef: null,
         window: {
@@ -114,6 +124,9 @@
       handleResize() {
         this.window.width = window.innerWidth;
         this.window.height = window.innerHeight;
+      },
+      clearPlayers() {
+        this.$fb.ref('games/' + this.$route.params.gameId + '/users').remove()
       },
       getDBGame() {
         this.$fb.ref('games/' + this.$route.params.gameId).on('value', snap => {
@@ -158,6 +171,7 @@
       },
       toggleMaster(forceFalse = false) {
         this.master = forceFalse ? false : !this.master
+        this.canClick = !this.master
         this.userRef.update({master: this.master})
       },
       isChecked(word) {
