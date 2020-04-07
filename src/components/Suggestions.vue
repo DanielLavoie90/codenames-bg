@@ -17,7 +17,7 @@
                     </button>
                 </div>
             </div>
-            <div v-else>
+            <div v-else class="text-2xl">
                 Aucune suggestions de mots
             </div>
             <button @click="addWord"
@@ -42,7 +42,7 @@
                     </button>
                 </div>
             </div>
-            <div v-else>
+            <div v-else class="text-2xl">
                 Aucune suggestions de features
             </div>
             <button @click="addFeature"
