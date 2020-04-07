@@ -53,6 +53,10 @@
                     class="btn btn-default btn-primary mt-4">
                 Créer une partie
             </button>
+            <br>
+            <router-link to="suggestions" class="btn btn-default btn-primary mt-4">
+                Suggestions
+            </router-link>
         </div>
         <div v-else>
             <div v-if="error" class="text-red-600">
